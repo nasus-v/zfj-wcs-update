@@ -1,41 +1,7 @@
 ```
--- ============================================================
--- 现场接口上报相关参数配置（sys_config）
--- 包含：
---   1. ifXjReport          现场HTTP上报总开关（XjHttpUtils，true=允许上报告警/拆托/拆封完成/P9组盘）
---   2. isTestP1/P4/P6/P9   各仓库WMS回传测试开关（WmsHandle，true=跳过真实发送直接返回成功）
--- 可重复执行：已存在的配置不会被覆盖（NOT EXISTS 判断）
--- ============================================================
+UPDATE position_info SET type = 'p1_unpack_work'
+WHERE ware_code = 'P1' AND code IN ('P1-25', 'P1-37');
 
-USE deer_wcs_xj;
-
--- 1. 现场接口上报总开关（XjHttpUtils 统一入口判断）
-INSERT INTO sys_config (config_name, config_key, config_value, config_type, create_by, create_time, remark)
-SELECT '现场接口上报总开关', 'ifXjReport', 'true', 'N', 'admin', NOW(), 'true=允许XjHttpUtils上报（告警/拆托明细/拆封完成/P9绑定P1组盘），false或未配置=跳过上报'
-WHERE NOT EXISTS (SELECT 1 FROM sys_config WHERE config_key = 'ifXjReport');
-
--- 2. P1仓库WMS回传测试开关
-INSERT INTO sys_config (config_name, config_key, config_value, config_type, create_by, create_time, remark)
-SELECT 'P1仓库WMS回传测试开关', 'isTestP1', 'true', 'N', 'admin', NOW(), 'true=跳过WMS真实发送直接返回成功，false=正常上报'
-WHERE NOT EXISTS (SELECT 1 FROM sys_config WHERE config_key = 'isTestP1');
-
--- 3. P4仓库WMS回传测试开关
-INSERT INTO sys_config (config_name, config_key, config_value, config_type, create_by, create_time, remark)
-SELECT 'P4仓库WMS回传测试开关', 'isTestP4', 'true', 'N', 'admin', NOW(), 'true=跳过WMS真实发送直接返回成功，false=正常上报'
-WHERE NOT EXISTS (SELECT 1 FROM sys_config WHERE config_key = 'isTestP4');
-
--- 4. P6仓库WMS回传测试开关
-INSERT INTO sys_config (config_name, config_key, config_value, config_type, create_by, create_time, remark)
-SELECT 'P6仓库WMS回传测试开关', 'isTestP6', 'true', 'N', 'admin', NOW(), 'true=跳过WMS真实发送直接返回成功，false=正常上报'
-WHERE NOT EXISTS (SELECT 1 FROM sys_config WHERE config_key = 'isTestP6');
-
--- 5. P9仓库WMS回传测试开关
-INSERT INTO sys_config (config_name, config_key, config_value, config_type, create_by, create_time, remark)
-SELECT 'P9仓库WMS回传测试开关', 'isTestP9', 'true', 'N', 'admin', NOW(), 'true=跳过WMS真实发送直接返回成功，false=正常上报'
-WHERE NOT EXISTS (SELECT 1 FROM sys_config WHERE config_key = 'isTestP9');
-
--- 验证
-SELECT config_id, config_name, config_key, config_value, remark
-FROM sys_config
-WHERE config_key IN ('ifXjReport', 'isTestP1', 'isTestP4', 'isTestP6', 'isTestP9');
+UPDATE position_info SET type = 'p1_palletize'
+WHERE ware_code = 'P1' AND code IN ('P1-38', 'P1-45');
 ```
